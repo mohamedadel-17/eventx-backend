@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 // All other requires like '../models/Event' should be removed from this file.
 
 exports.register = async (req, res) => {
-  const { username, password, role, age, gender } = req.body;
+  const { username, password, role, age, gender,email } = req.body;
   try {
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists." });
     }
@@ -20,6 +20,7 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       role,
       age,
+      email,
       gender,
     });
     await user.save();
@@ -31,9 +32,9 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials." });
     }
